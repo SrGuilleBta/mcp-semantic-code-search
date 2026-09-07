@@ -1,0 +1,9 @@
+services:
+  mcp-server:
+    build: .
+    container_name: mcp_code_search_dev
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: tail -f /dev/null
