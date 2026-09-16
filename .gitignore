@@ -1,0 +1,12 @@
+# Notas personales, no se comparten en el repo
+docker-notes.md
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Datos generados (embeddings de ChromaDB, etc.)
+data/*
+!data/.gitkeep
