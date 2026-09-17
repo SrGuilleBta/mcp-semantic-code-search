@@ -10,17 +10,19 @@ def parse_file(file_path):
     for nodo in arbol.body:
         if isinstance(nodo, ast.FunctionDef):
             chunk = {
-                "name": nodo.name,
-                "type": "function",
-                "start_line": nodo.lineno,
-                "end_line": nodo.end_lineno,
-                "code": ast.get_source_segment(source, nodo),
+            "name": nodo.name,
+            "type": "function",
+            "file_path": file_path,
+            "start_line": nodo.lineno,
+            "end_line": nodo.end_lineno,
+            "code": ast.get_source_segment(source, nodo),
             }
             chunks.append(chunk)
         elif isinstance(nodo, ast.ClassDef):
             chunk = {
                 "name": nodo.name,
                 "type": "class",
+                "file_path": file_path,
                 "start_line": nodo.lineno,
                 "end_line": nodo.end_lineno,
                 "code": ast.get_source_segment(source, nodo),
@@ -32,6 +34,7 @@ def parse_file(file_path):
                     metodo_chunk = {
                         "name": nodo.name + "." + miembro.name,
                         "type": "method",
+                        "file_path": file_path,
                         "start_line": miembro.lineno,
                         "end_line": miembro.end_lineno,
                         "code": ast.get_source_segment(source, miembro),
@@ -44,7 +47,7 @@ def parse_file(file_path):
 if __name__ == "__main__":
     resultados = parse_file("src/ejemplo.py")
     for chunk in resultados:
-        print(chunk["name"], "->", chunk["type"])
+        print(chunk["name"], "->", chunk["type"], "|", chunk["file_path"])
         print(chunk["code"])
         print("---")
 

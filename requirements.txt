@@ -1,3 +1,4 @@
 chromadb==0.4.24
 sentence-transformers==2.5.1
 mcp
+numpy<2.0.0

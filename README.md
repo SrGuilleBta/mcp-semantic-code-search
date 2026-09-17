@@ -3,7 +3,6 @@
 ![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
 ![Docker](https://img.shields.io/badge/docker-ready-blue.svg)
 ![MCP](https://img.shields.io/badge/Model_Context_Protocol-supported-green.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 > A local **Model Context Protocol (MCP)** server that empowers AI assistants (like Claude) to intelligently navigate and understand large repositories. 
 
