@@ -3,12 +3,13 @@ from chromadb.utils import embedding_functions
 
 
 def agregar_chunks(coleccion, chunks):
-    ids=[]
-    documents=[]
+    ids = []
+    documents = []
     metadatas = []
 
+    ids_nuevos_por_archivo = {}
     for chunk in chunks:
-        chunk_id= chunk["file_path"]+ "::" + chunk["name"] + "::" + str(chunk["start_line"])
+        chunk_id = chunk["file_path"] + "::" + chunk["name"] + "::" + str(chunk["start_line"])
         ids.append(chunk_id)
         documents.append(chunk["code"])
         metadatas.append({
@@ -18,7 +19,18 @@ def agregar_chunks(coleccion, chunks):
             "start_line": chunk["start_line"],
             "end_line": chunk["end_line"],
         })
-    coleccion.upsert(ids=ids, documents= documents, metadatas=metadatas)
+
+        if chunk["file_path"] not in ids_nuevos_por_archivo:
+            ids_nuevos_por_archivo[chunk["file_path"]] = set()
+        ids_nuevos_por_archivo[chunk["file_path"]].add(chunk_id)
+
+    for archivo, ids_nuevos in ids_nuevos_por_archivo.items():
+        existentes = coleccion.get(where={"file_path": archivo})
+        ids_a_borrar = [id_existente for id_existente in existentes["ids"] if id_existente not in ids_nuevos]
+        if ids_a_borrar:
+            coleccion.delete(ids=ids_a_borrar)
+
+    coleccion.upsert(ids=ids, documents=documents, metadatas=metadatas)
 
 
 def obtener_coleccion():
