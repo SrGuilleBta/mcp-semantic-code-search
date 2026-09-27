@@ -1,3 +1,4 @@
+import os
 import ast
 
 def parse_file(file_path):
@@ -44,12 +45,29 @@ def parse_file(file_path):
 
     return chunks
 
+
+def parse_directory(root_dir):
+    ignorar = {".git", "__pycache__", "venv", ".venv", "node_modules", "data"}
+
+    todos_los_chunks = []
+    for dirpath, dirnames, filenames in os.walk(root_dir):
+        dirnames[:] = [d for d in dirnames if d not in ignorar]
+
+        for filename in filenames:
+            if filename.endswith(".py"):
+                file_path = os.path.join(dirpath, filename)
+                todos_los_chunks.extend(parse_file(file_path))
+
+    return todos_los_chunks
+
+
+
+
 if __name__ == "__main__":
-    resultados = parse_file("src/ejemplo.py")
+    resultados = parse_directory("src")
+    print(f"Total de chunks encontrados: {len(resultados)}")
     for chunk in resultados:
         print(chunk["name"], "->", chunk["type"], "|", chunk["file_path"])
-        print(chunk["code"])
-        print("---")
 
 
 
