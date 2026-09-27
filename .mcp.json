@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "mcp-semantic-code-search": {
+      "command": "docker",
+      "args": ["compose", "exec", "-T", "mcp-server", "python", "src/server.py"]
+    }
+  }
+}
