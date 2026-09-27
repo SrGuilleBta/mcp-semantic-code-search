@@ -67,10 +67,9 @@ docker compose exec mcp-server python src/vector_db.py     # index + query a sma
 ## 🏗️ How it works
 
 1. **`src/parser.py`** — uses Python's built-in `ast` module to extract functions, classes, and methods as intact code chunks (never a snippet cut mid-function), tagged with their file, name, type, and line range.
-2. **`src/vector_db.py`** — embeds each chunk with `sentence-transformers` (`all-MiniLM-L6-v2`) and stores it in a persistent ChromaDB collection, keyed by `file_path::name::start_line` so re-indexing a file updates its chunks instead of duplicating them.
+2. **`src/vector_db.py`** — embeds each chunk with `sentence-transformers` (`all-MiniLM-L6-v2`) and stores it in a persistent ChromaDB collection, keyed by `file_path::name::start_line`. Re-indexing a file updates its chunks and deletes any that no longer exist in the source (renamed/removed functions don't leave stale entries behind).
 3. **`src/server.py`** — exposes both steps as MCP tools over stdio, the standard transport for a local, single-user MCP server.
 
 ## ⚠️ Known limitations
 
-* Re-indexing does **not** clean up chunks for functions that were deleted or renamed — stale entries can accumulate in the database over repeated edits to the same files.
 * Only `.py` files are parsed; `.git`, `__pycache__`, `venv`, `.venv`, `node_modules`, and `data` are skipped when walking a directory.
